@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Careers - Tech Girlies Estate</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #0077be;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .content {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #0077be;
+    position: relative;
+  }
+
+  h2:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: #0077be;
+    margin: 15px auto;
+    border-radius: 2px;
+  }
+
+  /* Careers Hero */
+  .careers-hero {
+    background: linear-gradient(135deg, #0077be 0%, #005a8c 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 50px;
+  }
+
+  .careers-hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .careers-hero p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto 30px;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat-number {
+    font-size: 36px;
+    font-weight: bold;
+    display: block;
+  }
+
+  .hero-stat-label {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  /* Why Join Us */
+  .why-join-us {
+    margin: 60px 0;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .benefit-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+
+  .benefit-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: white;
+    font-size: 32px;
+  }
+
+  .benefit-card h3 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+
+  /* Open Positions */
+  .open-positions {
+    margin: 60px 0;
+  }
+
+  .positions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .position-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-left: 4px solid #0077be;
+    transition: all 0.3s ease;
+  }
+
+  .position-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+
+  .position-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .position-title h3 {
+    color: #0077be;
+    margin-bottom: 5px;
+    font-size: 20px;
+  }
+
+  .position-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .position-type {
+    background: #e7f3ff;
+    color: #0077be;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .position-description {
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+  }
+
+  .position-requirements {
+    margin-bottom: 25px;
+  }
+
+  .position-requirements h4 {
+    color: #0077be;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .requirements-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .requirements-list li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    color: #555;
+  }
+
+  .requirements-list li:before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #0077be;
+    font-weight: bold;
+  }
+
+  .apply-button {
+    display: inline-block;
+    background: #0077be;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+  }
+
+  .apply-button:hover {
+    background: #005a8c;
+    transform: translateY(-2px);
+  }
+
+  /* Culture Section */
+  .culture-section {
+    background: white;
+    padding: 60px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin: 60px 0;
+  }
+
+  .culture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .culture-item {
+    text-align: center;
+  }
+
+  .culture-icon {
+    width: 70px;
+    height: 70px;
+    background: #0077be;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 28px;
+  }
+
+  .culture-item h4 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+
+  /* Application Process */
+  .application-process {
+    margin: 60px 0;
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .process-step {
+    text-align: center;
+    position: relative;
+  }
+
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: #0077be;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 20px;
+  }
+
+  .process-step h4 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+
+  .process-step p {
+    color: #666;
+    font-size: 14px;
+  }
+
+  /* Employee Testimonials */
+  .employee-testimonials {
+    margin: 60px 0;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .employee-testimonial {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+
+  .testimonial-content {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .employee-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .employee-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  }
+
+  .employee-details h4 {
+    color: #0077be;
+    margin-bottom: 5px;
+  }
+
+  .employee-details .position {
+    color: #666;
+    font-size: 14px;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    color: white;
+    padding: 60px 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 60px 0;
+  }
+
+  .cta-section h3 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .cta-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button.primary {
+    background: white;
+    color: #0077be;
+  }
+
+  .cta-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  @media (max-width: 768px) {
+    .careers-hero h1 {
+      font-size: 36px;
+    }
+
+    .hero-stats {
+      gap: 20px;
+    }
+
+    .position-header {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .positions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-steps {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-button {
+      width: 200px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tech Girlies Estate</h1>
+  <a href="index.html" style="font-size:14px; color: white;">🏠 Home</a>
+</header>
+
+<div class="content">
+  <!-- Hero Section -->
+  <section class="careers-hero">
+    <h1>Build Your Career With Us</h1>
+    <p>Join South Africa's most innovative real estate team and shape the future of property technology</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-number">50+</span>
+        <span class="hero-stat-label">Team Members</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">5</span>
+        <span class="hero-stat-label">Provinces</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">R2.5B+</span>
+        <span class="hero-stat-label">Property Portfolio</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">98%</span>
+        <span class="hero-stat-label">Employee Satisfaction</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Join Us -->
+  <section class="why-join-us">
+    <h2>Why Join Tech Girlies Estate?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <h3>Innovation First</h3>
+        <p>Work with cutting-edge technology and shape the future of real estate with AI, VR, and data analytics.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Growth Opportunities</h3>
+        <p>Clear career progression paths, mentorship programs, and continuous learning opportunities.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Great Culture</h3>
+        <p>Collaborative environment, team events, and a supportive community that feels like family.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <i class="fas fa-award"></i>
+        </div>
+        <h3>Competitive Packages</h3>
+        <p>Attractive compensation, performance bonuses, health benefits, and flexible work arrangements.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Positions -->
+  <section class="open-positions">
+    <h2>Current Openings</h2>
+    <div class="positions-grid">
+      <!-- Position 1 -->
+      <div class="position-card">
+        <div class="position-header">
+          <div class="position-title">
+            <h3>Real Estate Agent</h3>
+            <div class="position-meta">
+              <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Pretoria</span>
+              <span class="meta-item"><i class="fas fa-clock"></i> Full-time</span>
+            </div>
+          </div>
+          <span class="position-type">Sales</span>
+        </div>
+        <div class="position-description">
+          Join our dynamic sales team and help clients find their dream properties using our innovative technology platform.
+        </div>
+        <div class="position-requirements">
+          <h4>Requirements:</h4>
+          <ul class="requirements-list">
+            <li>Valid real estate certification</li>
+            <li>2+ years sales experience</li>
+            <li>Excellent communication skills</li>
+            <li>Tech-savvy and adaptable</li>
+            <li>Own vehicle and driver's license</li>
+          </ul>
+        </div>
+        <a href="contact.html?position=Real Estate Agent" class="apply-button">Apply Now</a>
+      </div>
+
+      <!-- Position 2 -->
+      <div class="position-card">
+        <div class="position-header">
+          <div class="position-title">
+            <h3>Property Valuator</h3>
+            <div class="position-meta">
+              <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Johannesburg</span>
+              <span class="meta-item"><i class="fas fa-clock"></i> Full-time</span>
+            </div>
+          </div>
+          <span class="position-type">Valuation</span>
+        </div>
+        <div class="position-description">
+          Use our AI-powered valuation tools to provide accurate property assessments and market insights.
+        </div>
+        <div class="position-requirements">
+          <h4>Requirements:</h4>
+          <ul class="requirements-list">
+            <li>Degree in Property Studies or related</li>
+            <li>3+ years valuation experience</li>
+            <li>Strong analytical skills</li>
+            <li>Knowledge of local property markets</li>
+            <li>Attention to detail</li>
+          </ul>
+        </div>
+        <a href="contact.html?position=Property Valuator" class="apply-button">Apply Now</a>
+      </div>
+
+      <!-- Position 3 -->
+      <div class="position-card">
+        <div class="position-header">
+          <div class="position-title">
+            <h3>Tech Support Specialist</h3>
+            <div class="position-meta">
+              <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Remote</span>
+              <span class="meta-item"><i class="fas fa-clock"></i> Full-time</span>
+            </div>
+          </div>
+          <span class="position-type">Technology</span>
+        </div>
+        <div class="position-description">
+          Provide technical support for our property management platform and help clients with digital solutions.
+        </div>
+        <div class="position-requirements">
+          <h4>Requirements:</h4>
+          <ul class="requirements-list">
+            <li>IT/Computer Science degree</li>
+            <li>2+ years tech support experience</li>
+            <li>Excellent problem-solving skills</li>
+            <li>Knowledge of CRM systems</li>
+            <li>Great customer service skills</li>
+          </ul>
+        </div>
+        <a href="contact.html?position=Tech Support Specialist" class="apply-button">Apply Now</a>
+      </div>
+
+      <!-- Position 4 -->
+      <div class="position-card">
+        <div class="position-header">
+          <div class="position-title">
+            <h3>Marketing Coordinator</h3>
+            <div class="position-meta">
+              <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Cape Town</span>
+              <span class="meta-item"><i class="fas fa-clock"></i> Full-time</span>
+            </div>
+          </div>
+          <span class="position-type">Marketing</span>
+        </div>
+        <div class="position-description">
+            Create compelling marketing campaigns and digital content to promote our properties and services.
+        </div>
+        <div class="position-requirements">
+          <h4>Requirements:</h4>
+          <ul class="requirements-list">
+            <li>Marketing/Communications degree</li>
+            <li>Experience in digital marketing</li>
+            <li>Social media management skills</li>
+            <li>Content creation experience</li>
+            <li>Analytical mindset</li>
+          </ul>
+        </div>
+        <a href="contact.html?position=Marketing Coordinator" class="apply-button">Apply Now</a>
+      </div>
+
+      <!-- Position 5 -->
+      <div class="position-card">
+        <div class="position-header">
+          <div class="position-title">
+            <h3>Property Manager</h3>
+            <div class="position-meta">
+              <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Durban</span>
+              <span class="meta-item"><i class="fas fa-clock"></i> Full-time</span>
+            </div>
+          </div>
+          <span class="position-type">Management</span>
+        </div>
+        <div class="position-description">
+          Manage rental properties, coordinate maintenance, and ensure excellent tenant relationships.
+        </div>
+        <div class="position-requirements">
+          <h4>Requirements:</h4>
+          <ul class="requirements-list">
+            <li>3+ years property management</li>
+            <li>Knowledge of rental laws</li>
+            <li>Strong organizational skills</li>
+            <li>Excellent communication</li>
+            <li>Problem-solving ability</li>
+          </ul>
+        </div>
+        <a href="contact.html?position=Property Manager" class="apply-button">Apply Now</a>
+      </div>
+
+      <!-- Position 6 -->
+      <div class="position-card">
+        <div class="position-header">
+          <div class="position-title">
+            <h3>Data Analyst</h3>
+            <div class="position-meta">
+              <span class="meta-item"><i class="fas fa-map-marker-alt"></i> Remote</span>
+              <span class="meta-item"><i class="fas fa-clock"></i> Full-time</span>
+            </div>
+          </div>
+          <span class="position-type">Analytics</span>
+        </div>
+        <div class="position-description">
+          Analyze property market data to provide insights for investment decisions and market trends.
+        </div>
+        <div class="position-requirements">
+          <h4>Requirements:</h4>
+          <ul class="requirements-list">
+            <li>Degree in Data Science/Statistics</li>
+            <li>Proficiency in SQL/Python/R</li>
+            <li>Experience with data visualization</li>
+            <li>Analytical thinking</li>
+            <li>Real estate knowledge preferred</li>
+          </ul>
+        </div>
+        <a href="contact.html?position=Data Analyst" class="apply-button">Apply Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Culture Section -->
+  <section class="culture-section">
+    <h2>Our Culture & Values</h2>
+    <div class="culture-grid">
+      <div class="culture-item">
+        <div class="culture-icon">
+          <i class="fas fa-lightbulb"></i>
+        </div>
+        <h4>Innovation</h4>
+        <p>We embrace new ideas and technologies to revolutionize real estate.</p>
+      </div>
+      <div class="culture-item">
+        <div class="culture-icon">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <h4>Collaboration</h4>
+        <p>Teamwork makes the dream work - we achieve more together.</p>
+      </div>
+      <div class="culture-item">
+        <div class="culture-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <h4>Passion</h4>
+        <p>We love what we do and it shows in our exceptional results.</p>
+      </div>
+      <div class="culture-item">
+        <div class="culture-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h4>Integrity</h4>
+        <p>Honest, transparent dealings build lasting relationships.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Application Process -->
+  <section class="application-process">
+    <h2>Our Hiring Process</h2>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">1</div>
+        <h4>Application</h4>
+        <p>Submit your application and CV through our portal</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">2</div>
+        <h4>Screening</h4>
+        <p>Initial phone screening with HR</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">3</div>
+        <h4>Interviews</h4>
+        <p>Meet the team through virtual or in-person interviews</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">4</div>
+        <h4>Assessment</h4>
+        <p>Role-specific skills assessment</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">5</div>
+        <h4>Offer</h4>
+        <p>Receive and celebrate your offer!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Employee Testimonials -->
+  <section class="employee-testimonials">
+    <h2>Hear From Our Team</h2>
+    <div class="testimonials-grid">
+      <div class="employee-testimonial">
+        <div class="testimonial-content">
+          "The innovation and support at Tech Girlies Estate is incredible. I've grown more in 2 years here than 5 years at my previous company."
+        </div>
+        <div class="employee-info">
+          <div class="employee-avatar">SJ</div>
+          <div class="employee-details">
+            <h4>Sarah Johnson</h4>
+            <div class="position">Senior Real Estate Agent, 2 years</div>
+          </div>
+        </div>
+      </div>
+      <div class="employee-testimonial">
+        <div class="testimonial-content">
+          "The work-life balance and cutting-edge technology make this the perfect place for tech professionals in real estate."
+        </div>
+        <div class="employee-info">
+          <div class="employee-avatar">MC</div>
+          <div class="employee-details">
+            <h4>Mike Chen</h4>
+            <div class="position">Tech Lead, 3 years</div>
+          </div>
+        </div>
+      </div>
+      <div class="employee-testimonial">
+        <div class="testimonial-content">
+          "Management truly cares about career growth. I started as an intern and now lead a regional team thanks to their mentorship."
+        </div>
+        <div class="employee-info">
+          <div class="employee-avatar">LvM</div>
+          <div class="employee-details">
+            <h4>Lisa van der Merwe</h4>
+            <div class="position">Regional Manager, 4 years</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h3>Ready to Join Our Team?</h3>
+    <p>Take the first step towards an exciting career in innovative real estate.</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="cta-button primary">Apply Now</a>
+      <a href="mailto:careers@techgirlies.co.za" class="cta-button secondary">Send CV</a>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Animation for career elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const benefitCards = document.querySelectorAll('.benefit-card');
+    const positionCards = document.querySelectorAll('.position-card');
+    const cultureItems = document.querySelectorAll('.culture-item');
+    const processSteps = document.querySelectorAll('.process-step');
+    const testimonials = document.querySelectorAll('.employee-testimonial');
+
+    [...benefitCards, ...positionCards, ...cultureItems, ...processSteps, ...testimonials].forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Stagger animation for position cards
+    positionCards.forEach((card, index) => {
+      card.style.transitionDelay = `${index * 0.1}s`;
+    });
+  });
+
+  // Handle position parameter in URL
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const position = urlParams.get('position');
+    if (position) {
+      // Scroll to positions section and highlight relevant position
+      setTimeout(() => {
+        const positionsSection = document.querySelector('.open-positions');
+        if (positionsSection) {
+          positionsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    }
+  });
+</script>
+</body>
+</html>

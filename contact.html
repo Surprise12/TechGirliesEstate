@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact - Tech Girlies Estate</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #0077be;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .content {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #0077be;
+  }
+  .contact-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 30px;
+  }
+  .contact-info {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .contact-info h3 {
+    color: #0077be;
+    margin-bottom: 20px;
+  }
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  .info-item i {
+    font-size: 20px;
+    color: #0077be;
+    margin-right: 15px;
+    width: 24px;
+    text-align: center;
+  }
+  #contactForm {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  #contactForm input, #contactForm textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  #contactForm input:focus, #contactForm textarea:focus {
+    border-color: #0077be;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,119,190,0.2);
+  }
+  #sendBtn {
+    width: 100%;
+    padding: 15px;
+    background-color: #0077be;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  #sendBtn:hover {
+    background-color: #005a8c;
+  }
+  @media (max-width: 768px) {
+    .contact-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tech Girlies Estate</h1>
+  <a href="index.html" style="font-size:14px; color: white;">🏠 Home</a>
+</header>
+<div class="content">
+  <h2>Contact Us</h2>
+  <div class="contact-container">
+    <div class="contact-info">
+      <h3>Get In Touch</h3>
+      <div class="info-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <div>
+          <strong>Address</strong><br>
+          123 Estate Avenue<br>
+          Pretoria, 0001
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-phone"></i>
+        <div>
+          <strong>Phone</strong><br>
+          +27 12 345 6789
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-envelope"></i>
+        <div>
+          <strong>Email</strong><br>
+          info@techgirlies.co.za
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-clock"></i>
+        <div>
+          <strong>Business Hours</strong><br>
+          Mon-Fri: 8:00-17:00<br>
+          Sat: 9:00-13:00
+        </div>
+      </div>
+    </div>
+    <form id="contactForm">
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <input type="tel" placeholder="Your Phone Number" />
+      <textarea placeholder="Your Message" rows="6" required></textarea>
+      <button type="submit" id="sendBtn">Send Message</button>
+    </form>
+  </div>
+</div>
+<script>
+  document.getElementById('contactForm').onsubmit = function(e) {
+    e.preventDefault();
+    alert('Thank you for contacting us! We will get back to you within 24 hours.');
+    this.reset();
+  }
+</script>
+</body>
+</html>

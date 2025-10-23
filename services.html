@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Services - Tech Girlies Estate</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #0077be;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .content {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #0077be;
+    position: relative;
+  }
+
+  h2:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: #0077be;
+    margin: 15px auto;
+    border-radius: 2px;
+  }
+
+  /* Services Hero */
+  .services-hero {
+    background: linear-gradient(135deg, #0077be 0%, #005a8c 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 50px;
+  }
+
+  .services-hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .services-hero p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Services Grid */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin: 50px 0;
+  }
+
+  .service-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+    border-top: 4px solid #0077be;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+
+  .service-card:hover:before {
+    transform: scaleX(1);
+  }
+
+  .service-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: white;
+    font-size: 32px;
+  }
+
+  .service-card h3 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+
+  .service-card p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .service-features {
+    text-align: left;
+    margin: 25px 0;
+  }
+
+  .service-features li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+    color: #555;
+  }
+
+  .service-features li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #0077be;
+    font-weight: bold;
+  }
+
+  .service-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0077be;
+    margin: 20px 0;
+  }
+
+  .service-cta {
+    display: inline-block;
+    background: #0077be;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .service-cta:hover {
+    background: #005a8c;
+    transform: translateY(-2px);
+  }
+
+  /* Process Section */
+  .process-section {
+    background: white;
+    padding: 60px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    margin: 60px 0;
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .process-step {
+    text-align: center;
+    position: relative;
+  }
+
+  .process-step:not(:last-child):after {
+    content: '→';
+    position: absolute;
+    right: -25px;
+    top: 40px;
+    font-size: 24px;
+    color: #0077be;
+    font-weight: bold;
+  }
+
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: #0077be;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 20px;
+  }
+
+  .process-step h4 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+
+  /* Why Choose Us */
+  .why-choose-us {
+    margin: 60px 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .feature-item {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    background: #0077be;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .feature-content h4 {
+    color: #0077be;
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
+
+  /* Pricing Comparison */
+  .pricing-comparison {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 60px 40px;
+    border-radius: 15px;
+    margin: 60px 0;
+  }
+
+  .comparison-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-top: 40px;
+  }
+
+  .comparison-header {
+    background: #0077be;
+    color: white;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+    font-weight: bold;
+  }
+
+  .comparison-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+
+  .comparison-row:nth-child(even) {
+    background: #f8f9fa;
+  }
+
+  .check-mark {
+    color: #28a745;
+    font-weight: bold;
+  }
+
+  .cross-mark {
+    color: #dc3545;
+    font-weight: bold;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    color: white;
+    padding: 60px 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 60px 0;
+  }
+
+  .cta-section h3 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .cta-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button.primary {
+    background: white;
+    color: #0077be;
+  }
+
+  .cta-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  @media (max-width: 768px) {
+    .services-hero h1 {
+      font-size: 36px;
+    }
+
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-step:not(:last-child):after {
+      display: none;
+    }
+
+    .process-steps {
+      grid-template-columns: 1fr;
+    }
+
+    .comparison-header,
+    .comparison-row {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-button {
+      width: 200px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tech Girlies Estate</h1>
+  <a href="index.html" style="font-size:14px; color: white;">🏠 Home</a>
+</header>
+
+<div class="content">
+  <!-- Hero Section -->
+  <section class="services-hero">
+    <h1>Our Services</h1>
+    <p>Comprehensive real estate solutions tailored to your unique needs</p>
+  </section>
+
+  <!-- Services Grid -->
+  <section>
+    <h2>What We Offer</h2>
+    <div class="services-grid">
+      <!-- Property Sales -->
+      <div class="service-card">
+        <div class="service-icon">
+          <i class="fas fa-home"></i>
+        </div>
+        <h3>Property Sales</h3>
+        <p>Complete property sales service from valuation to closing</p>
+        <div class="service-features">
+          <li>Professional property valuation</li>
+          <li>Strategic marketing campaigns</li>
+          <li>Qualified buyer screening</li>
+          <li>Negotiation expertise</li>
+          <li>Legal documentation support</li>
+        </div>
+        <div class="service-price">Commission Based</div>
+        <a href="contact.html" class="service-cta">Start Selling</a>
+      </div>
+
+      <!-- Property Rental -->
+      <div class="service-card">
+        <div class="service-icon">
+          <i class="fas fa-key"></i>
+        </div>
+        <h3>Property Rental</h3>
+        <p>Professional rental management for landlords and tenants</p>
+        <div class="service-features">
+          <li>Tenant screening & verification</li>
+          <li>Rent collection services</li>
+          <li>Property maintenance coordination</li>
+          <li>Lease agreement management</li>
+          <li>Regular property inspections</li>
+        </div>
+        <div class="service-price">8% Monthly</div>
+        <a href="contact.html" class="service-cta">Manage Rental</a>
+      </div>
+
+      <!-- Property Valuation -->
+      <div class="service-card">
+        <div class="service-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Property Valuation</h3>
+        <p>Accurate market valuations for informed decision making</p>
+        <div class="service-features">
+          <li>Comprehensive market analysis</li>
+          <li>Comparative market assessment</li>
+          <li>Investment potential evaluation</li>
+          <li>Detailed valuation report</li>
+          <li>Future value projections</li>
+        </div>
+        <div class="service-price">From R1,500</div>
+        <a href="contact.html" class="service-cta">Get Valuation</a>
+      </div>
+
+      <!-- Investment Consulting -->
+      <div class="service-card">
+        <div class="service-icon">
+          <i class="fas fa-hand-holding-usd"></i>
+        </div>
+        <h3>Investment Consulting</h3>
+        <p>Strategic advice for property investment success</p>
+        <div class="service-features">
+          <li>Portfolio strategy development</li>
+          <li>Market trend analysis</li>
+          <li>ROI projections</li>
+          <li>Risk assessment</li>
+          <li>Investment opportunity sourcing</li>
+        </div>
+        <div class="service-price">Custom Quote</div>
+        <a href="contact.html" class="service-cta">Invest Smart</a>
+      </div>
+
+      <!-- Legal Services -->
+      <div class="service-card">
+        <div class="service-icon">
+          <i class="fas fa-gavel"></i>
+        </div>
+        <h3>Legal Support</h3>
+        <p>Expert legal guidance through property transactions</p>
+        <div class="service-features">
+          <li>Contract review & preparation</li>
+          <li>Title deed verification</li>
+          <li>Transfer process management</li>
+          <li>Bond registration assistance</li>
+          <li>Legal dispute resolution</li>
+        </div>
+        <div class="service-price">From R3,000</div>
+        <a href="contact.html" class="service-cta">Get Legal Help</a>
+      </div>
+
+      <!-- Property Marketing -->
+      <div class="service-card">
+        <div class="service-icon">
+          <i class="fas fa-bullhorn"></i>
+        </div>
+        <h3>Property Marketing</h3>
+        <p>Maximum exposure for your property across all channels</p>
+        <div class="service-features">
+          <li>Professional photography & videography</li>
+          <li>Virtual tours & 3D walkthroughs</li>
+          <li>Multi-platform listing</li>
+          <li>Social media campaigns</li>
+          <li>Targeted advertising</li>
+        </div>
+        <div class="service-price">From R2,500</div>
+        <a href="contact.html" class="service-cta">Market Property</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="process-section">
+    <h2>Our Proven Process</h2>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">1</div>
+        <h4>Consultation</h4>
+        <p>We understand your needs, goals, and timeline through detailed consultation</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">2</div>
+        <h4>Strategy</h4>
+        <p>Develop customized strategy with clear objectives and action plan</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">3</div>
+        <h4>Execution</h4>
+        <p>Implement the plan with precision using our expertise and technology</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">4</div>
+        <h4>Completion</h4>
+        <p>Successfully close the transaction and provide post-service support</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="why-choose-us">
+    <h2>Why Choose Tech Girlies Estate?</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <div class="feature-content">
+          <h4>Technology Driven</h4>
+          <p>Leveraging cutting-edge technology for faster, smarter property solutions</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="feature-content">
+          <h4>Proven Track Record</h4>
+          <p>98% success rate with over 500 satisfied clients and R2.5B+ in property value</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="feature-content">
+          <h4>Time Efficient</h4>
+          <p>Average 30% faster transaction times compared to industry standards</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-award"></i>
+        </div>
+        <div class="feature-content">
+          <h4>Award Winning</h4>
+          <p>Recognized as one of South Africa's most innovative real estate agencies</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Comparison -->
+  <section class="pricing-comparison">
+    <h2>Service Comparison</h2>
+    <div class="comparison-table">
+      <div class="comparison-header">
+        <div>Service Feature</div>
+        <div>Standard Agencies</div>
+        <div>Tech Girlies Estate</div>
+      </div>
+      <div class="comparison-row">
+        <div>Digital Marketing</div>
+        <div class="cross-mark">Limited</div>
+        <div class="check-mark">Comprehensive</div>
+      </div>
+      <div class="comparison-row">
+        <div>Virtual Tours</div>
+        <div class="cross-mark">Extra Cost</div>
+        <div class="check-mark">Included</div>
+      </div>
+      <div class="comparison-row">
+        <div>AI Property Valuation</div>
+        <div class="cross-mark">Not Available</div>
+        <div class="check-mark">Included</div>
+      </div>
+      <div class="comparison-row">
+        <div>Online Document Management</div>
+        <div class="cross-mark">Manual</div>
+        <div class="check-mark">Digital Platform</div>
+      </div>
+      <div class="comparison-row">
+        <div>24/7 Client Support</div>
+        <div class="cross-mark">Business Hours</div>
+        <div class="check-mark">24/7 Available</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h3>Ready to Get Started?</h3>
+    <p>Contact us today for a free consultation and discover how we can help you achieve your property goals.</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="cta-button primary">Get Free Consultation</a>
+      <a href="tel:+27123456789" class="cta-button secondary">Call Now</a>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Animation for service cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const serviceCards = document.querySelectorAll('.service-card');
+    const processSteps = document.querySelectorAll('.process-step');
+    const featureItems = document.querySelectorAll('.feature-item');
+
+    [...serviceCards, ...processSteps, ...featureItems].forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Stagger animation for service cards
+    serviceCards.forEach((card, index) => {
+      card.style.transitionDelay = `${index * 0.1}s`;
+    });
+  });
+</script>
+</body>
+</html>

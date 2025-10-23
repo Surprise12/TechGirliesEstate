@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us - Tech Girlies Estate</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #0077be;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .content {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #0077be;
+    position: relative;
+  }
+
+  h2:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: #0077be;
+    margin: 15px auto;
+    border-radius: 2px;
+  }
+
+  /* About Hero Section */
+  .about-hero {
+    background: linear-gradient(135deg, #0077be 0%, #005a8c 100%);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-hero:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="1000,100 1000,0 0,100"/></svg>');
+    background-size: cover;
+  }
+
+  .about-hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .about-hero p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Mission & Vision */
+  .mission-vision {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 50px 0;
+  }
+
+  .mission-card, .vision-card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .mission-card:hover, .vision-card:hover {
+    transform: translateY(-10px);
+  }
+
+  .mission-card i, .vision-card i {
+    font-size: 48px;
+    color: #0077be;
+    margin-bottom: 20px;
+  }
+
+  .mission-card h3, .vision-card h3 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+
+  /* Team Section */
+  .team-section {
+    margin: 60px 0;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .team-member {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+
+  .member-photo {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 60px;
+  }
+
+  .member-info {
+    padding: 25px;
+  }
+
+  .member-info h4 {
+    color: #0077be;
+    margin-bottom: 5px;
+    font-size: 20px;
+  }
+
+  .member-info .position {
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .member-info p {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    color: white;
+    padding: 80px 20px;
+    border-radius: 15px;
+    margin: 60px 0;
+    text-align: center;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
+  /* Values Section */
+  .values-section {
+    margin: 60px 0;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .value-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+    border-left: 4px solid #0077be;
+  }
+
+  .value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+  }
+
+  .value-card i {
+    font-size: 40px;
+    color: #0077be;
+    margin-bottom: 20px;
+  }
+
+  .value-card h4 {
+    color: #0077be;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+
+  /* Timeline */
+  .timeline {
+    margin: 60px 0;
+    position: relative;
+  }
+
+  .timeline:before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #0077be;
+    transform: translateX(-50%);
+  }
+
+  .timeline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    position: relative;
+  }
+
+  .timeline-item:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .timeline-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 45%;
+    position: relative;
+  }
+
+  .timeline-content:after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    width: 20px;
+    height: 20px;
+    background: #0077be;
+    transform: rotate(45deg);
+  }
+
+  .timeline-item:nth-child(odd) .timeline-content:after {
+    right: -10px;
+  }
+
+  .timeline-item:nth-child(even) .timeline-content:after {
+    left: -10px;
+  }
+
+  .timeline-year {
+    background: #0077be;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    width: 45%;
+    text-align: center;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, #0077be, #005a8c);
+    color: white;
+    padding: 60px 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 60px 0;
+  }
+
+  .cta-section h3 {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .cta-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: white;
+    color: #0077be;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  @media (max-width: 768px) {
+    .mission-vision {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline:before {
+      left: 30px;
+    }
+
+    .timeline-item {
+      flex-direction: row !important;
+    }
+
+    .timeline-content {
+      width: calc(100% - 80px);
+      margin-left: 80px;
+    }
+
+    .timeline-content:after {
+      left: -10px !important;
+      right: auto !important;
+    }
+
+    .timeline-year {
+      width: 60px;
+      position: absolute;
+      left: 0;
+    }
+
+    .about-hero h1 {
+      font-size: 36px;
+    }
+
+    .about-hero p {
+      font-size: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tech Girlies Estate</h1>
+  <a href="index.html" style="font-size:14px; color: white;">🏠 Home</a>
+</header>
+
+<div class="content">
+  <!-- Hero Section -->
+  <section class="about-hero">
+    <h1>About Tech Girlies Estate</h1>
+    <p>Leading the future of real estate with innovation, integrity, and exceptional service since 2018</p>
+  </section>
+
+  <!-- Mission & Vision -->
+  <section>
+    <h2>Our Mission & Vision</h2>
+    <div class="mission-vision">
+      <div class="mission-card">
+        <i class="fas fa-bullseye"></i>
+        <h3>Our Mission</h3>
+        <p>To revolutionize the real estate industry by providing innovative solutions, transparent processes, and exceptional service that empowers our clients to make confident property decisions.</p>
+      </div>
+      <div class="vision-card">
+        <i class="fas fa-eye"></i>
+        <h3>Our Vision</h3>
+        <p>To be Africa's most trusted real estate partner, known for transforming property transactions through technology, expertise, and unwavering commitment to client success.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <h2 style="color: white;">By The Numbers</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">500+</span>
+        <span class="stat-label">Properties Sold</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">R2.5B+</span>
+        <span class="stat-label">Property Value</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">98%</span>
+        <span class="stat-label">Client Satisfaction</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">15+</span>
+        <span class="stat-label">Years Experience</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Story -->
+  <section>
+    <h2>Our Story</h2>
+    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); line-height: 1.8;">
+      <p style="margin-bottom: 20px; font-size: 18px;">
+        Founded in 2018 by a team of passionate real estate professionals and technology experts, Tech Girlies Estate emerged from a simple yet powerful vision: to bridge the gap between traditional real estate practices and modern technological innovation.
+      </p>
+      <p style="margin-bottom: 20px; font-size: 18px;">
+        What started as a small boutique agency in Pretoria has grown into a leading real estate force across Gauteng, North West, and Free State. Our unique approach combines deep market knowledge with cutting-edge technology, ensuring our clients receive the best of both worlds.
+      </p>
+      <p style="font-size: 18px;">
+        Today, we're proud to have helped hundreds of families and investors find their perfect properties while maintaining our core values of transparency, innovation, and client-first service.
+      </p>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="timeline">
+    <h2>Our Journey</h2>
+    <div class="timeline-item">
+      <div class="timeline-year">2018</div>
+      <div class="timeline-content">
+        <h4>Foundation</h4>
+        <p>Tech Girlies Estate founded with focus on technology-driven real estate solutions</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2020</div>
+      <div class="timeline-content">
+        <h4>Expansion</h4>
+        <p>Expanded services to Johannesburg and Cape Town. Launched our proprietary property management platform</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2022</div>
+      <div class="timeline-content">
+        <h4>Innovation</h4>
+        <p>Introduced AI-powered property valuation and virtual tour technology. Won "Most Innovative Real Estate Agency" award</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">2024</div>
+      <div class="timeline-content">
+        <h4>Leadership</h4>
+        <p>Recognized as one of South Africa's top 10 real estate agencies. Expanded to 5 provinces with 50+ team members</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section">
+    <h2>Meet Our Leadership Team</h2>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="member-photo">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="member-info">
+          <h4>Sarah Johnson</h4>
+          <div class="position">CEO & Founder</div>
+          <p>15+ years in real estate. Passionate about technology innovation and client satisfaction.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="member-photo">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="member-info">
+          <h4>Mike Chen</h4>
+          <div class="position">CTO</div>
+          <p>Technology visionary with expertise in PropTech solutions and digital transformation.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="member-photo">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="member-info">
+          <h4>Lisa van der Merwe</h4>
+          <div class="position">Head of Sales</div>
+          <p>12 years experience in property sales and client relationship management.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="values-section">
+    <h2>Our Core Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <i class="fas fa-shield-alt"></i>
+        <h4>Integrity</h4>
+        <p>We believe in transparent, honest dealings and always putting our clients' interests first.</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-lightbulb"></i>
+        <h4>Innovation</h4>
+        <p>Continuously evolving with technology to provide cutting-edge real estate solutions.</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-hands-helping"></i>
+        <h4>Excellence</h4>
+        <p>Committed to delivering exceptional service and outstanding results in every transaction.</p>
+      </div>
+      <div class="value-card">
+        <i class="fas fa-users"></i>
+        <h4>Collaboration</h4>
+        <p>Working together with clients, partners, and communities to achieve mutual success.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h3>Ready to Work With Us?</h3>
+    <p>Join hundreds of satisfied clients who have found their dream properties with Tech Girlies Estate.</p>
+    <a href="contact.html" class="cta-button">Get In Touch Today</a>
+  </section>
+</div>
+
+<script>
+  // Animate stats counter
+  function animateStats() {
+    const stats = document.querySelectorAll('.stat-number');
+    stats.forEach(stat => {
+      const target = parseInt(stat.textContent);
+      let current = 0;
+      const increment = target / 100;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          stat.textContent = target + (stat.textContent.includes('B') ? 'B+' : '+');
+          clearInterval(timer);
+        } else {
+          stat.textContent = Math.floor(current) + (stat.textContent.includes('B') ? 'B+' : '+');
+        }
+      }, 20);
+    });
+  }
+
+  // Intersection Observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('stats-section')) {
+          animateStats();
+        }
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  // Observe elements for animation
+  document.addEventListener('DOMContentLoaded', () => {
+    const animateElements = document.querySelectorAll('.mission-card, .vision-card, .team-member, .value-card, .timeline-content');
+    animateElements.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Observe stats section
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+      observer.observe(statsSection);
+    }
+  });
+</script>
+</body>
+</html>
