@@ -15,7 +15,7 @@
   }
 
   body { 
-    font-family: 'Roboto', sans-serif; 
+    font-family: 'Roboto', Arial, sans-serif; 
     background: #f8f9fa; 
     color: #333;
     line-height: 1.6;
@@ -199,6 +199,23 @@
     gap: 20px;
   }
 
+  /* Fallback for older browsers */
+  @supports not (display: grid) {
+    .form-grid {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    .form-grid .form-group {
+      flex: 1 1 45%;
+      margin: 10px;
+    }
+    
+    .form-full {
+      flex: 1 1 100%;
+    }
+  }
+
   .form-full {
     grid-column: 1 / -1;
   }
@@ -248,6 +265,20 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin-bottom: 25px;
+  }
+
+  /* Fallback for older browsers */
+  @supports not (display: grid) {
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    
+    .stats-grid .stat-card {
+      flex: 1 1 200px;
+      margin: 10px;
+    }
   }
 
   .stat-card {
@@ -456,9 +487,9 @@
     </div>
     <div style="display: flex; gap: 10px; margin-top: 25px;">
       <button type="submit" class="btn-primary" style="flex: 1;">Login</button>
-   <button type="button" class="btn-primary" style="flex: 1;" onclick="window.location.href='index.html'">
-  <i class="fas fa-arrow-left"></i> Go Back To Estate Dashboard
-</button>
+      <button type="button" class="btn-primary" style="flex: 1;" onclick="window.location.href='index.html'">
+        <i class="fas fa-arrow-left"></i> Go Back To Estate Dashboard
+      </button>
     </div>
   </form>
   <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 6px; font-size: 13px; border-left: 4px solid #ffc107;">
@@ -710,24 +741,89 @@
 </div>
 
 <script>
+  // =================== COMPATIBILITY FIXES ===================
+  
+  // Enhanced localStorage with fallback
+  var storage = {
+    setItem: function(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        // Fallback to sessionStorage or in-memory storage
+        try {
+          sessionStorage.setItem(key, value);
+        } catch (e2) {
+          // Final fallback to in-memory storage
+          this.memoryStorage = this.memoryStorage || {};
+          this.memoryStorage[key] = value;
+        }
+      }
+    },
+    
+    getItem: function(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        try {
+          return sessionStorage.getItem(key);
+        } catch (e2) {
+          return (this.memoryStorage && this.memoryStorage[key]) || null;
+        }
+      }
+    }
+  };
+
+  // Check if browser supports modern features
+  function checkBrowserCompatibility() {
+    var issues = [];
+    
+    // Check for localStorage
+    try {
+      storage.setItem('test', 'test');
+      storage.removeItem('test');
+    } catch (e) {
+      issues.push('localStorage not available - using fallback storage');
+    }
+    
+    // Check for ES6 features
+    if (typeof Symbol === 'undefined') {
+      issues.push('ES6 not fully supported - some features may not work');
+    }
+    
+    // Check for CSS Grid
+    var gridSupport = CSS && CSS.supports && CSS.supports('display', 'grid');
+    if (!gridSupport) {
+      issues.push('CSS Grid not supported - using flexbox fallback');
+    }
+    
+    if (issues.length > 0) {
+      console.warn('Compatibility issues detected:', issues);
+    }
+    
+    return issues;
+  }
+
   // =================== Configuration ===================
-  const ADMIN_CREDENTIALS = {
+  var ADMIN_CREDENTIALS = {
     username: 'admin',
     password: 'admin123'
   };
 
   // =================== Global Variables ===================
-  let currentRole = 'guest';
-  let properties = JSON.parse(localStorage.getItem('properties')) || [];
-  let displayProperties = [];
-  let tempImages = [];
-  const pageSize = 10;
-  let currentPage = 1;
-  let inactivityTimer;
+  var currentRole = 'guest';
+  var properties = [];
+  var displayProperties = [];
+  var tempImages = [];
+  var pageSize = 10;
+  var currentPage = 1;
+  var inactivityTimer;
 
   // =================== Initialize Application ===================
   function init() {
     console.log('Initializing Admin Dashboard...');
+    
+    // Check browser compatibility
+    checkBrowserCompatibility();
     
     // Load properties and sync with index.html
     loadAndSyncProperties();
@@ -739,49 +835,51 @@
 
   // =================== Property Synchronization ===================
   function loadAndSyncProperties() {
-    // Try to get properties from localStorage first
-    let storedProperties = localStorage.getItem('properties');
+    // Try to get properties from storage first
+    var storedProperties = storage.getItem('properties');
     
     if (storedProperties) {
-      properties = JSON.parse(storedProperties);
+      try {
+        properties = JSON.parse(storedProperties);
+      } catch (e) {
+        console.warn('Failed to parse stored properties, using sample data');
+        properties = getSampleProperties();
+        storage.setItem('properties', JSON.stringify(properties));
+      }
     } else {
-      // If no properties in localStorage, create sample data
+      // If no properties in storage, create sample data
       properties = getSampleProperties();
-      localStorage.setItem('properties', JSON.stringify(properties));
+      storage.setItem('properties', JSON.stringify(properties));
     }
     
     // Set up storage event listener for cross-tab synchronization
     window.addEventListener('storage', function(e) {
       if (e.key === 'properties') {
-        properties = JSON.parse(e.newValue || '[]');
-        if (currentRole === 'admin') {
-          loadAdminProperties();
+        try {
+          properties = JSON.parse(e.newValue || '[]');
+          if (currentRole === 'admin') {
+            loadAdminProperties();
+          }
+        } catch (error) {
+          console.error('Error syncing properties:', error);
         }
       }
     });
-    
-    // Also sync when properties are updated in the same tab
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-      originalSetItem.apply(this, arguments);
-      if (key === 'properties') {
-        window.dispatchEvent(new StorageEvent('storage', {
-          key: key,
-          newValue: value
-        }));
-      }
-    };
   }
 
   function syncPropertiesToIndex() {
-    // Update localStorage and dispatch storage event
-    localStorage.setItem('properties', JSON.stringify(properties));
+    // Update storage
+    storage.setItem('properties', JSON.stringify(properties));
     
     // Also try to update any open index.html tabs
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: 'properties',
-      newValue: JSON.stringify(properties)
-    }));
+    try {
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'properties',
+        newValue: JSON.stringify(properties)
+      }));
+    } catch (e) {
+      console.log('Storage event dispatch not supported');
+    }
   }
 
   function getSampleProperties() {
@@ -837,18 +935,24 @@
     // Export/Import buttons
     document.getElementById('exportCSV').addEventListener('click', exportCSV);
     document.getElementById('exportAnalytics').addEventListener('click', exportAnalytics);
-    document.getElementById('importCSV').addEventListener('click', () => document.getElementById('importCSVFile').click());
+    document.getElementById('importCSV').addEventListener('click', function() { 
+      document.getElementById('importCSVFile').click(); 
+    });
     document.getElementById('importCSVFile').addEventListener('change', handleCSVImport);
     document.getElementById('adminSearch').addEventListener('input', filterProperties);
 
     // Image upload functionality
-    const imageDropArea = document.getElementById('imageDropArea');
-    imageDropArea.addEventListener('click', () => document.getElementById('imageUpload').click());
+    var imageDropArea = document.getElementById('imageDropArea');
+    imageDropArea.addEventListener('click', function() { 
+      document.getElementById('imageUpload').click(); 
+    });
     imageDropArea.addEventListener('dragover', handleDragOver);
     imageDropArea.addEventListener('dragleave', handleDragLeave);
     imageDropArea.addEventListener('drop', handleDrop);
     
-    document.getElementById('browseImages').addEventListener('click', () => document.getElementById('imageUpload').click());
+    document.getElementById('browseImages').addEventListener('click', function() { 
+      document.getElementById('imageUpload').click(); 
+    });
     document.getElementById('imageUpload').addEventListener('change', handleFileSelect);
 
     // Close modal when clicking outside
@@ -859,10 +963,10 @@
     });
 
     // Reset inactivity timer on user activity
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-    events.forEach(event => {
-      document.addEventListener(event, resetInactivityTimer);
-    });
+    var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    for (var i = 0; i < events.length; i++) {
+      document.addEventListener(events[i], resetInactivityTimer);
+    }
 
     console.log('Admin event listeners setup complete');
   }
@@ -870,8 +974,8 @@
   // =================== Authentication System ===================
   function handleLogin(e) {
     e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
     
     if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
       loginAsAdmin();
@@ -896,8 +1000,12 @@
     updateStatistics();
     
     // Set session
-    sessionStorage.setItem('adminLoggedIn', 'true');
-    sessionStorage.setItem('adminSession', Date.now().toString());
+    try {
+      sessionStorage.setItem('adminLoggedIn', 'true');
+      sessionStorage.setItem('adminSession', Date.now().toString());
+    } catch (e) {
+      console.warn('Session storage not available');
+    }
     resetInactivityTimer();
     
     console.log('Admin logged in successfully');
@@ -915,8 +1023,12 @@
     document.getElementById('loginPanel').classList.remove('hidden');
     
     // Clear session
-    sessionStorage.removeItem('adminLoggedIn');
-    sessionStorage.removeItem('adminSession');
+    try {
+      sessionStorage.removeItem('adminLoggedIn');
+      sessionStorage.removeItem('adminSession');
+    } catch (e) {
+      console.warn('Session storage not available');
+    }
     clearTimeout(inactivityTimer);
     
     // Reset login form
@@ -926,23 +1038,27 @@
   }
 
   function checkAdminSession() {
-    const loggedIn = sessionStorage.getItem('adminLoggedIn');
-    const sessionTime = sessionStorage.getItem('adminSession');
-    
-    if (loggedIn === 'true' && sessionTime) {
-      const sessionAge = Date.now() - parseInt(sessionTime);
-      if (sessionAge < 2 * 60 * 60 * 1000) { // 2 hours
-        loginAsAdmin();
-      } else {
-        logout();
+    try {
+      var loggedIn = sessionStorage.getItem('adminLoggedIn');
+      var sessionTime = sessionStorage.getItem('adminSession');
+      
+      if (loggedIn === 'true' && sessionTime) {
+        var sessionAge = Date.now() - parseInt(sessionTime);
+        if (sessionAge < 2 * 60 * 60 * 1000) { // 2 hours
+          loginAsAdmin();
+        } else {
+          logout();
+        }
       }
+    } catch (e) {
+      console.warn('Session storage not available');
     }
   }
 
   function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     if (currentRole === 'admin') {
-      inactivityTimer = setTimeout(() => {
+      inactivityTimer = setTimeout(function() {
         alert('Session expired due to inactivity');
         logout();
       }, 30 * 60 * 1000); // 30 minutes
@@ -974,12 +1090,12 @@
   function handleDrop(e) {
     e.preventDefault();
     document.getElementById('imageDropArea').classList.remove('dragover');
-    const files = e.dataTransfer.files;
+    var files = e.dataTransfer.files;
     handleFiles(files);
   }
 
   function handleFileSelect(e) {
-    const files = e.target.files;
+    var files = e.target.files;
     handleFiles(files);
   }
 
@@ -989,60 +1105,64 @@
       return;
     }
 
-    Array.from(files).slice(0, 10 - tempImages.length).forEach(file => {
+    var fileArray = Array.prototype.slice.call(files);
+    for (var i = 0; i < Math.min(fileArray.length, 10 - tempImages.length); i++) {
+      var file = fileArray[i];
       if (!file.type.match('image.*')) {
         alert('Please upload only image files');
-        return;
+        continue;
       }
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const container = document.createElement('div');
-        container.className = 'image-preview-container';
-        
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-image';
-        removeBtn.innerHTML = '×';
-        removeBtn.addEventListener('click', function() {
-          const index = tempImages.indexOf(e.target.result);
-          if (index > -1) {
-            tempImages.splice(index, 1);
-          }
-          container.remove();
-        });
+      var reader = new FileReader();
+      reader.onload = (function(file) {
+        return function(e) {
+          var container = document.createElement('div');
+          container.className = 'image-preview-container';
+          
+          var img = document.createElement('img');
+          img.src = e.target.result;
+          
+          var removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-image';
+          removeBtn.innerHTML = '×';
+          removeBtn.addEventListener('click', function() {
+            var index = tempImages.indexOf(e.target.result);
+            if (index > -1) {
+              tempImages.splice(index, 1);
+            }
+            container.remove();
+          });
 
-        container.appendChild(img);
-        container.appendChild(removeBtn);
-        
-        document.getElementById('imagePreview').appendChild(container);
-        tempImages.push(e.target.result);
-      };
+          container.appendChild(img);
+          container.appendChild(removeBtn);
+          
+          document.getElementById('imagePreview').appendChild(container);
+          tempImages.push(e.target.result);
+        };
+      })(file);
       reader.readAsDataURL(file);
-    });
+    }
   }
 
   // =================== Property Management ===================
   function loadAdminProperties() {
-    displayProperties = [...properties];
+    displayProperties = properties.slice();
     currentPage = 1;
     renderAdminTable();
     updateStatistics();
   }
 
   function saveProperties() {
-    localStorage.setItem('properties', JSON.stringify(properties));
+    storage.setItem('properties', JSON.stringify(properties));
     updateStatistics();
     syncPropertiesToIndex(); // Sync with index.html
   }
 
   function updateStatistics() {
-    const total = properties.length;
-    const available = properties.filter(p => p.status === 'Available').length;
-    const sold = properties.filter(p => p.status === 'Sold').length;
-    const totalValue = properties.reduce((sum, p) => sum + (p.price || 0), 0);
+    var total = properties.length;
+    var available = properties.filter(function(p) { return p.status === 'Available'; }).length;
+    var sold = properties.filter(function(p) { return p.status === 'Sold'; }).length;
+    var totalValue = properties.reduce(function(sum, p) { return sum + (p.price || 0); }, 0);
     
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statAvailable').textContent = available;
@@ -1058,26 +1178,30 @@
   }
 
   function saveProperty() {
-    const id = document.getElementById('propId').value;
-    const title = document.getElementById('title').value;
-    const type = document.getElementById('type').value;
-    const status = document.getElementById('status').value;
-    const price = parseFloat(document.getElementById('price').value);
-    const location = document.getElementById('location').value;
-    const bedrooms = parseInt(document.getElementById('bedrooms').value) || 0;
-    const bathrooms = parseInt(document.getElementById('bathrooms').value) || 0;
-    const squareMeters = parseInt(document.getElementById('squareMeters').value) || 0;
-    const parkingSpaces = parseInt(document.getElementById('parkingSpaces').value) || 0;
-    const furnishing = document.getElementById('furnishing').value;
-    const petFriendly = document.getElementById('petFriendly').value;
-    const description = document.getElementById('description').value;
-    const owner = document.getElementById('owner').value;
-    const ownerPhone = document.getElementById('ownerPhone').value;
-    const ownerEmail = document.getElementById('ownerEmail').value;
-    const ownerAddress = document.getElementById('ownerAddress').value;
-    const features = document.getElementById('features').value.split(',').map(f => f.trim()).filter(f => f);
+    var id = document.getElementById('propId').value;
+    var title = document.getElementById('title').value;
+    var type = document.getElementById('type').value;
+    var status = document.getElementById('status').value;
+    var price = parseFloat(document.getElementById('price').value);
+    var location = document.getElementById('location').value;
+    var bedrooms = parseInt(document.getElementById('bedrooms').value) || 0;
+    var bathrooms = parseInt(document.getElementById('bathrooms').value) || 0;
+    var squareMeters = parseInt(document.getElementById('squareMeters').value) || 0;
+    var parkingSpaces = parseInt(document.getElementById('parkingSpaces').value) || 0;
+    var furnishing = document.getElementById('furnishing').value;
+    var petFriendly = document.getElementById('petFriendly').value;
+    var description = document.getElementById('description').value;
+    var owner = document.getElementById('owner').value;
+    var ownerPhone = document.getElementById('ownerPhone').value;
+    var ownerEmail = document.getElementById('ownerEmail').value;
+    var ownerAddress = document.getElementById('ownerAddress').value;
+    var features = document.getElementById('features').value.split(',').map(function(f) { 
+      return f.trim(); 
+    }).filter(function(f) { 
+      return f; 
+    });
     
-    const images = [...tempImages];
+    var images = tempImages.slice();
 
     // Validation
     if (!title || !type || !status || !price || !location || !owner || !ownerPhone || !ownerEmail || !ownerAddress) {
@@ -1085,20 +1209,33 @@
       return;
     }
 
-    const property = {
+    var property = {
       id: id || Date.now().toString(),
-      title, type, status, price, location,
-      bedrooms, bathrooms, squareMeters, parkingSpaces,
-      furnishing, petFriendly, description,
-      owner, ownerPhone, ownerEmail, ownerAddress,
-      features, images,
-      dateAdded: id ? properties.find(p => p.id === id)?.dateAdded : new Date().toISOString().split('T')[0],
+      title: title,
+      type: type,
+      status: status,
+      price: price,
+      location: location,
+      bedrooms: bedrooms,
+      bathrooms: bathrooms,
+      squareMeters: squareMeters,
+      parkingSpaces: parkingSpaces,
+      furnishing: furnishing,
+      petFriendly: petFriendly,
+      description: description,
+      owner: owner,
+      ownerPhone: ownerPhone,
+      ownerEmail: ownerEmail,
+      ownerAddress: ownerAddress,
+      features: features,
+      images: images,
+      dateAdded: id ? (properties.find(function(p) { return p.id === id; }) || {}).dateAdded : new Date().toISOString().split('T')[0],
       lastModified: new Date().toISOString()
     };
 
     if (id) {
       // Update existing property
-      const index = properties.findIndex(p => p.id === id);
+      var index = properties.findIndex(function(p) { return p.id === id; });
       if (index !== -1) {
         properties[index] = property;
       }
@@ -1114,7 +1251,7 @@
   }
 
   function editProperty(propertyId) {
-    const property = properties.find(p => p.id === propertyId);
+    var property = properties.find(function(p) { return p.id === propertyId; });
     if (!property) return;
 
     // Fill form with property data
@@ -1138,20 +1275,20 @@
     document.getElementById('features').value = property.features ? property.features.join(', ') : '';
 
     // Show images
-    const preview = document.getElementById('imagePreview');
+    var preview = document.getElementById('imagePreview');
     preview.innerHTML = '';
-    property.images.forEach(src => {
-      const container = document.createElement('div');
+    property.images.forEach(function(src) {
+      var container = document.createElement('div');
       container.className = 'image-preview-container';
       
-      const img = document.createElement('img');
+      var img = document.createElement('img');
       img.src = src;
       
-      const removeBtn = document.createElement('button');
+      var removeBtn = document.createElement('button');
       removeBtn.className = 'remove-image';
       removeBtn.innerHTML = '×';
       removeBtn.addEventListener('click', function() {
-        const index = tempImages.indexOf(src);
+        var index = tempImages.indexOf(src);
         if (index > -1) {
           tempImages.splice(index, 1);
         }
@@ -1162,7 +1299,7 @@
       container.appendChild(removeBtn);
       preview.appendChild(container);
     });
-    tempImages = [...property.images];
+    tempImages = property.images.slice();
 
     document.getElementById('formTitle').textContent = 'Edit Property';
     document.getElementById('propertyFormModal').classList.add('show');
@@ -1170,7 +1307,7 @@
 
   function deleteProperty(propertyId) {
     if (confirm('Are you sure you want to delete this property?')) {
-      properties = properties.filter(p => p.id !== propertyId);
+      properties = properties.filter(function(p) { return p.id !== propertyId; });
       saveProperties();
       loadAdminProperties();
       alert('Property deleted successfully!');
@@ -1178,12 +1315,12 @@
   }
 
   function duplicateProperty(propertyId) {
-    const original = properties.find(p => p.id === propertyId);
+    var original = properties.find(function(p) { return p.id === propertyId; });
     if (!original) return;
 
-    const duplicate = JSON.parse(JSON.stringify(original));
+    var duplicate = JSON.parse(JSON.stringify(original));
     duplicate.id = Date.now().toString();
-    duplicate.title = `${original.title} (Copy)`;
+    duplicate.title = original.title + ' (Copy)';
     duplicate.status = 'Available';
     duplicate.dateAdded = new Date().toISOString().split('T')[0];
     
@@ -1195,72 +1332,47 @@
 
   // =================== Table & Pagination ===================
   function filterProperties() {
-    const searchVal = document.getElementById('adminSearch').value.toLowerCase();
-    displayProperties = properties.filter(p => 
-      p.title.toLowerCase().includes(searchVal) || 
-      p.owner.toLowerCase().includes(searchVal) ||
-      p.location.toLowerCase().includes(searchVal) ||
-      p.type.toLowerCase().includes(searchVal)
-    );
+    var searchVal = document.getElementById('adminSearch').value.toLowerCase();
+    displayProperties = properties.filter(function(p) { 
+      return p.title.toLowerCase().includes(searchVal) || 
+             (p.owner && p.owner.toLowerCase().includes(searchVal)) ||
+             p.location.toLowerCase().includes(searchVal) ||
+             p.type.toLowerCase().includes(searchVal);
+    });
     currentPage = 1;
     renderAdminTable();
   }
 
   function renderAdminTable() {
-    const tbody = document.getElementById('adminTableBody');
+    var tbody = document.getElementById('adminTableBody');
     tbody.innerHTML = '';
     
-    const start = (currentPage - 1) * pageSize;
-    const pageItems = displayProperties.slice(start, start + pageSize);
+    var start = (currentPage - 1) * pageSize;
+    var pageItems = displayProperties.slice(start, start + pageSize);
     
     if (pageItems.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="11" style="text-align: center; padding: 40px; color: #666;">
-            <i class="fas fa-home" style="font-size: 48px; margin-bottom: 10px;"></i>
-            <p>No properties found</p>
-          </td>
-        </tr>
-      `;
+      tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-home" style="font-size: 48px; margin-bottom: 10px;"></i><p>No properties found</p></td></tr>';
       renderPagination();
       return;
     }
 
-    pageItems.forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>
-          <input type="checkbox" class="property-checkbox" data-id="${p.id}" />
-        </td>
-        <td>
-          <strong>${p.title}</strong>
-        </td>
-        <td>${p.type}</td>
-        <td>
-          <span class="status-badge status-${p.status.toLowerCase().replace(' ', '-')}">
-            ${p.status}
-          </span>
-        </td>
-        <td>${p.location}</td>
-        <td><strong>R ${p.price.toLocaleString()}</strong></td>
-        <td>${p.bedrooms || 0} / ${p.bathrooms || 0}</td>
-        <td>${p.squareMeters || 'N/A'} m²</td>
-        <td>${p.images ? p.images.length : 0} images</td>
-        <td>${p.dateAdded}</td>
-        <td>
-          <div class="action-buttons">
-            <button onclick="editProperty('${p.id}')" class="btn-primary" title="Edit">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button onclick="deleteProperty('${p.id}')" class="btn-danger" title="Delete">
-              <i class="fas fa-trash"></i>
-            </button>
-            <button onclick="duplicateProperty('${p.id}')" class="btn-info" title="Duplicate">
-              <i class="fas fa-copy"></i>
-            </button>
-          </div>
-        </td>
-      `;
+    pageItems.forEach(function(p) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><input type="checkbox" class="property-checkbox" data-id="' + p.id + '" /></td>' +
+        '<td><strong>' + p.title + '</strong></td>' +
+        '<td>' + p.type + '</td>' +
+        '<td><span class="status-badge status-' + p.status.toLowerCase().replace(' ', '-') + '">' + p.status + '</span></td>' +
+        '<td>' + p.location + '</td>' +
+        '<td><strong>R ' + (p.price || 0).toLocaleString() + '</strong></td>' +
+        '<td>' + (p.bedrooms || 0) + ' / ' + (p.bathrooms || 0) + '</td>' +
+        '<td>' + (p.squareMeters || 'N/A') + ' m²</td>' +
+        '<td>' + (p.images ? p.images.length : 0) + ' images</td>' +
+        '<td>' + (p.dateAdded || 'N/A') + '</td>' +
+        '<td><div class="action-buttons">' +
+        '<button onclick="editProperty(\'' + p.id + '\')" class="btn-primary" title="Edit"><i class="fas fa-edit"></i></button>' +
+        '<button onclick="deleteProperty(\'' + p.id + '\')" class="btn-danger" title="Delete"><i class="fas fa-trash"></i></button>' +
+        '<button onclick="duplicateProperty(\'' + p.id + '\')" class="btn-info" title="Duplicate"><i class="fas fa-copy"></i></button>' +
+        '</div></td>';
       tbody.appendChild(tr);
     });
     
@@ -1268,60 +1380,68 @@
   }
 
   function renderPagination() {
-    const totalPages = Math.ceil(displayProperties.length / pageSize);
-    const container = document.getElementById('paginationControls');
+    var totalPages = Math.ceil(displayProperties.length / pageSize);
+    var container = document.getElementById('paginationControls');
     container.innerHTML = '';
     
     if (totalPages <= 1) return;
 
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
+    for (var i = 1; i <= totalPages; i++) {
+      var btn = document.createElement('button');
       btn.innerText = i;
       if (i === currentPage) {
         btn.classList.add('active');
         btn.disabled = true;
       }
-      btn.onclick = () => {
-        currentPage = i;
-        renderAdminTable();
-      };
+      btn.onclick = (function(page) {
+        return function() {
+          currentPage = page;
+          renderAdminTable();
+        };
+      })(i);
       container.appendChild(btn);
     }
   }
 
   // =================== Bulk Actions ===================
   function toggleSelectAll() {
-    const checkboxes = document.querySelectorAll('.property-checkbox');
-    const selectAll = document.getElementById('selectAll').checked;
+    var checkboxes = document.querySelectorAll('.property-checkbox');
+    var selectAll = document.getElementById('selectAll').checked;
     
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = selectAll;
-    });
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = selectAll;
+    }
   }
 
   function getSelectedProperties() {
-    const checkboxes = document.querySelectorAll('.property-checkbox:checked');
-    return Array.from(checkboxes).map(cb => cb.dataset.id);
+    var checkboxes = document.querySelectorAll('.property-checkbox:checked');
+    var selectedIds = [];
+    for (var i = 0; i < checkboxes.length; i++) {
+      selectedIds.push(checkboxes[i].dataset.id);
+    }
+    return selectedIds;
   }
 
   function bulkDelete() {
-    const selectedIds = getSelectedProperties();
+    var selectedIds = getSelectedProperties();
     if (selectedIds.length === 0) {
       alert('Please select properties to delete');
       return;
     }
     
-    if (confirm(`Are you sure you want to delete ${selectedIds.length} properties? This action cannot be undone.`)) {
-      properties = properties.filter(p => !selectedIds.includes(p.id));
+    if (confirm('Are you sure you want to delete ' + selectedIds.length + ' properties? This action cannot be undone.')) {
+      properties = properties.filter(function(p) { 
+        return !selectedIds.includes(p.id); 
+      });
       saveProperties();
       loadAdminProperties();
-      alert(`Successfully deleted ${selectedIds.length} properties.`);
+      alert('Successfully deleted ' + selectedIds.length + ' properties.');
     }
   }
 
   function bulkUpdateStatus() {
-    const selectedIds = getSelectedProperties();
-    const newStatus = document.getElementById('bulkStatus').value;
+    var selectedIds = getSelectedProperties();
+    var newStatus = document.getElementById('bulkStatus').value;
     
     if (selectedIds.length === 0) {
       alert('Please select properties to update');
@@ -1333,7 +1453,7 @@
       return;
     }
     
-    properties.forEach(p => {
+    properties.forEach(function(p) {
       if (selectedIds.includes(p.id)) {
         p.status = newStatus;
         p.lastModified = new Date().toISOString();
@@ -1342,45 +1462,45 @@
     
     saveProperties();
     loadAdminProperties();
-    alert(`Updated status for ${selectedIds.length} properties to "${newStatus}".`);
+    alert('Updated status for ' + selectedIds.length + ' properties to "' + newStatus + '".');
     document.getElementById('bulkStatus').value = '';
   }
 
   // =================== Export/Import ===================
   function exportCSV() {
-    let csv = 'ID,Title,Type,Status,Price,Location,Bedrooms,Bathrooms,SquareMeters,ParkingSpaces,Furnishing,PetFriendly,Description,Owner,OwnerPhone,OwnerEmail,OwnerAddress,Features,Images,DateAdded\n';
+    var csv = 'ID,Title,Type,Status,Price,Location,Bedrooms,Bathrooms,SquareMeters,ParkingSpaces,Furnishing,PetFriendly,Description,Owner,OwnerPhone,OwnerEmail,OwnerAddress,Features,Images,DateAdded\n';
     
-    properties.forEach(p => {
-      const row = [
+    properties.forEach(function(p) {
+      var row = [
         p.id,
-        `"${p.title}"`,
+        '"' + p.title + '"',
         p.type,
         p.status,
         p.price,
-        `"${p.location}"`,
+        '"' + p.location + '"',
         p.bedrooms || 0,
         p.bathrooms || 0,
         p.squareMeters || 0,
         p.parkingSpaces || 0,
         p.furnishing || '',
         p.petFriendly || '',
-        `"${(p.description || '').replace(/"/g, '""')}"`,
-        `"${p.owner}"`,
+        '"' + (p.description || '').replace(/"/g, '""') + '"',
+        '"' + p.owner + '"',
         p.ownerPhone,
-        `"${p.ownerEmail}"`,
-        `"${p.ownerAddress.replace(/"/g, '""')}"`,
-        `"${(p.features || []).join(',')}"`,
-        `"${p.images.join('|')}"`,
-        p.dateAdded
+        '"' + p.ownerEmail + '"',
+        '"' + (p.ownerAddress || '').replace(/"/g, '""') + '"',
+        '"' + (p.features || []).join(',') + '"',
+        '"' + (p.images || []).join('|') + '"',
+        p.dateAdded || ''
       ];
       csv += row.join(',') + '\n';
     });
     
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url;
-    a.download = `properties-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = 'properties-export-' + new Date().toISOString().split('T')[0] + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1388,7 +1508,7 @@
   }
 
   function exportAnalytics() {
-    const analytics = {
+    var analytics = {
       exportDate: new Date().toISOString(),
       totalProperties: properties.length,
       statistics: {
@@ -1397,34 +1517,36 @@
         byLocation: {}
       },
       financials: {
-        totalPortfolioValue: properties.reduce((sum, p) => sum + p.price, 0),
-        averagePrice: properties.length > 0 ? properties.reduce((sum, p) => sum + p.price, 0) / properties.length : 0,
-        highestPrice: Math.max(...properties.map(p => p.price)),
-        lowestPrice: Math.min(...properties.map(p => p.price))
+        totalPortfolioValue: properties.reduce(function(sum, p) { return sum + (p.price || 0); }, 0),
+        averagePrice: properties.length > 0 ? properties.reduce(function(sum, p) { return sum + (p.price || 0); }, 0) / properties.length : 0,
+        highestPrice: Math.max.apply(Math, properties.map(function(p) { return p.price || 0; })),
+        lowestPrice: Math.min.apply(Math, properties.map(function(p) { return p.price || 0; }))
       },
-      properties: properties.map(p => ({
-        id: p.id,
-        title: p.title,
-        type: p.type,
-        status: p.status,
-        price: p.price,
-        location: p.location,
-        dateAdded: p.dateAdded
-      }))
+      properties: properties.map(function(p) {
+        return {
+          id: p.id,
+          title: p.title,
+          type: p.type,
+          status: p.status,
+          price: p.price,
+          location: p.location,
+          dateAdded: p.dateAdded
+        };
+      })
     };
 
     // Calculate statistics
-    properties.forEach(p => {
+    properties.forEach(function(p) {
       analytics.statistics.byType[p.type] = (analytics.statistics.byType[p.type] || 0) + 1;
       analytics.statistics.byStatus[p.status] = (analytics.statistics.byStatus[p.status] || 0) + 1;
       analytics.statistics.byLocation[p.location] = (analytics.statistics.byLocation[p.location] || 0) + 1;
     });
 
-    const blob = new Blob([JSON.stringify(analytics, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    var blob = new Blob([JSON.stringify(analytics, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url;
-    a.download = `property-analytics-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = 'property-analytics-' + new Date().toISOString().split('T')[0] + '.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1432,27 +1554,27 @@
   }
 
   function handleCSVImport(e) {
-    const file = e.target.files[0];
+    var file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
+    var reader = new FileReader();
     reader.onload = function(e) {
       try {
-        const csv = e.target.result;
-        const lines = csv.split('\n');
-        const headers = lines[0].split(',').map(h => h.trim());
+        var csv = e.target.result;
+        var lines = csv.split('\n');
+        var headers = lines[0].split(',').map(function(h) { return h.trim(); });
         
-        let importedCount = 0;
+        var importedCount = 0;
         
-        for (let i = 1; i < lines.length; i++) {
+        for (var i = 1; i < lines.length; i++) {
           if (lines[i].trim() === '') continue;
           
-          const values = parseCSVLine(lines[i]);
+          var values = parseCSVLine(lines[i]);
           if (values.length !== headers.length) continue;
           
-          const property = {};
-          headers.forEach((header, index) => {
-            let value = values[index];
+          var property = {};
+          headers.forEach(function(header, index) {
+            var value = values[index];
             // Remove quotes if present
             if (typeof value === 'string' && value.startsWith('"') && value.endsWith('"')) {
               value = value.slice(1, -1);
@@ -1465,9 +1587,9 @@
             
             // Parse arrays
             if (header === 'Features') {
-              value = value ? value.split(',').map(f => f.trim()).filter(f => f) : [];
+              value = value ? value.split(',').map(function(f) { return f.trim(); }).filter(function(f) { return f; }) : [];
             } else if (header === 'Images') {
-              value = value ? value.split('|').filter(img => img) : [];
+              value = value ? value.split('|').filter(function(img) { return img; }) : [];
             }
             
             property[header.toLowerCase()] = value;
@@ -1484,7 +1606,7 @@
         
         saveProperties();
         loadAdminProperties();
-        alert(`Successfully imported ${importedCount} properties.`);
+        alert('Successfully imported ' + importedCount + ' properties.');
         
       } catch (error) {
         alert('Error importing CSV file: ' + error.message);
@@ -1497,12 +1619,12 @@
   }
 
   function parseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
+    var result = [];
+    var current = '';
+    var inQuotes = false;
     
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
+    for (var i = 0; i < line.length; i++) {
+      var char = line[i];
       
       if (char === '"') {
         inQuotes = !inQuotes;
@@ -1519,16 +1641,16 @@
   }
 
   // =================== Initialize Application ===================
-  document.addEventListener('DOMContentLoaded', function() {
+  function initializeApp() {
     console.log('DOM fully loaded');
     init();
-  });
+  }
 
-  // Fallback for older browsers
+  // Cross-browser DOM ready detection
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initializeApp);
   } else {
-    init();
+    initializeApp();
   }
 
   // Make functions globally available
